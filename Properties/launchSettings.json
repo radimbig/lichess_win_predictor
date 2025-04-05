@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Lichess_Prediction": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\Users\\Admin\\Documents\\my_projects\\C#\\Lichess_Prediction"
+    }
+  }
+}
