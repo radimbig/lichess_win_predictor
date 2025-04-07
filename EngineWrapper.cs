@@ -47,6 +47,10 @@ namespace Lichess_Prediction
             PathToEngine = pathToEngine;
             StartEngine();
         }
+        public EngineWrapper(string pathToEngine, int depth) : this(pathToEngine)
+        {
+            depth = this.depth;
+        }
         public double GetChance(string fen)
         {
             if(fen == LastFen)
@@ -57,7 +61,7 @@ namespace Lichess_Prediction
             var writer = process?.StandardInput;
             var reader = process?.StandardOutput;
 
-
+            writer.WriteLine("ucinewgame"); // clears hash table
 
             writer.WriteLine($"position fen {fen}");
 
@@ -78,6 +82,8 @@ namespace Lichess_Prediction
         {
             Console.Clear();
             Console.WriteLine($"cp is {x}");
+            double chances = 50 + 50 * (2 / (1 + Math.Exp(-0.004 * x)) - 1);
+            Console.WriteLine($"winning chance probably:{chances}");
         }
 
         public void PrintChance(string fen)

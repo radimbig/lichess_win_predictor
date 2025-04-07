@@ -1,0 +1,6 @@
+{
+  "token": "your_token",
+  "refreshRate": 5000,
+  "engine_depth": 12,
+  "pathToEngine": "stockfish.exe"
+}

@@ -8,41 +8,20 @@ namespace Lichess_Prediction
 
         static async Task Main(string[] args)
         {
-            
-            string? token;
-            int refreshRate = 5000;
-            string default_path_to_engine = "stockfish.exe";
-            
+            UserSettings settings = new UserSettings();
+            string? token = settings.LichessToken;
+            int refreshRate = settings.RefreshRate;
+            string default_path_to_engine = settings.PathToEngine;
+            int depth = settings.LichessDepth;
 
 
-            using (var r = new StreamReader("token.txt"))
-            {
-                token = r.ReadLine();
-                if (!r.EndOfStream)
-                {
-                    try
-                    {
-                        string? tempLine = r.ReadLine();
-                        refreshRate = Convert.ToInt32(tempLine);
-                    }
-                    catch (Exception ex)
-                    {
-                            Console.WriteLine(ex.Message);
-                            Console.WriteLine($"Problems with reading refresh rate, setting to {refreshRate}");
-                    }
-                }
-            }
-            if(String.IsNullOrEmpty(token))
-            {
-                throw new Exception("No token found in token.txt");
-            }
             var client = new LichessApiClient();
             await client.SetToken(token);
             var email = await client.GetAccountEmail();
             Console.WriteLine($"connected to:{email}");
 
             var games = await client.GetOngoingGamesAsync(1);
-            using(var engine = new EngineWrapper(default_path_to_engine))
+            using(var engine = new EngineWrapper(default_path_to_engine, depth))
             {
                 while (games.Count > 0)
                 {
