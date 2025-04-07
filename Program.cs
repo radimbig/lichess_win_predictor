@@ -1,4 +1,5 @@
 ﻿using LichessNET.API;
+using LichessNET.Entities.Game;
 
 namespace Lichess_Prediction
 {
@@ -11,33 +12,53 @@ namespace Lichess_Prediction
             UserSettings settings = new UserSettings();
             string? token = settings.LichessToken;
             int refreshRate = settings.RefreshRate;
-            string default_path_to_engine = settings.PathToEngine;
+            string default_path_to_engine = settings.PathToEngine ?? "stockfish.exe";
             int depth = settings.LichessDepth;
+            string? apiUrl = settings.EngineApiURL;
 
 
-            var client = new LichessApiClient();
-            await client.SetToken(token);
-            var email = await client.GetAccountEmail();
+            var lichessApi = new LichessApiClient();
+            await lichessApi.SetToken(token);
+            
+            var email = await lichessApi.GetAccountEmail();
             Console.WriteLine($"connected to:{email}");
 
-            var games = await client.GetOngoingGamesAsync(1);
-            using(var engine = new EngineWrapper(default_path_to_engine, depth))
+
+            
+            
+            
+            var games = await lichessApi.GetOngoingGamesAsync(1);
+            if (games.Count == 0)
             {
-                while (games.Count > 0)
-                {
-                    string FEN = games[0].Fen;
-                    Console.WriteLine(FEN);
-                    double chance = engine.GetChance(FEN);
-                    engine.PrintChance(chance);
-                    Thread.Sleep(refreshRate);
-                    games = await client.GetOngoingGamesAsync(1);
-                }
+                Console.WriteLine("No games found");
+                return;
             }
             
-            Console.WriteLine("No game currently going, exit...");
+            
+            using (var engine = new EngineWrapper(default_path_to_engine, depth))
+            {
+                using(var c = new HttpClient())
+                {
+                    await engine.PrintAllChancesAsync(games[0].Fen, c, lichessApi, apiUrl);
+                    
+                    string lastFen = games[0].Fen;
 
+                    while (games.Count > 0) 
+                    {
+                        Thread.Sleep(refreshRate);
+                        games = await lichessApi.GetOngoingGamesAsync(1);
+                        if (games.Count < 1) return;
+                        if (games[0].Fen == lastFen)
+                        {
+                            continue;
+                        }
+                        lastFen = games[0].Fen;
+                        await engine.PrintAllChancesAsync(lastFen, c, lichessApi, apiUrl);
+                    }
+                }
+            }
 
+            
         }
-       
     }
 }

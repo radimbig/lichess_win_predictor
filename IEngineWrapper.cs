@@ -9,11 +9,11 @@ namespace Lichess_Prediction
     public interface IEngineWrapper
     {
         
-        void PrintChance(double x);
+        void PrintLocalChance(int x);
 
-        void PrintChance(string fen);
+        void PrintLocalChance(string fen);
 
-        double GetChance(string fen);
+        int GetLocalCp(string fen);
 
 
     }

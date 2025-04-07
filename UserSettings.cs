@@ -9,11 +9,11 @@ namespace Lichess_Prediction
 {
     public class UserSettings
     {
-        public string LichessToken;
+        public string? LichessToken;
         public int RefreshRate;
         public int LichessDepth;
-        public string PathToEngine;
-
+        public string? PathToEngine;
+        public string? EngineApiURL;
         public UserSettings()
         {
             string text = File.ReadAllText("settings.json");
@@ -22,6 +22,7 @@ namespace Lichess_Prediction
             RefreshRate = doc.RootElement.GetProperty("refreshRate").GetInt32();
             LichessDepth = doc.RootElement.GetProperty("engine_depth").GetInt32();
             PathToEngine = doc.RootElement.GetProperty("pathToEngine").GetString();
+            EngineApiURL = doc.RootElement.GetProperty("engineApiURL").GetString();
         }
     }
 }
