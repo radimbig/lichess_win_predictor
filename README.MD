@@ -1,4 +1,4 @@
-#THIS IS CLONE WITHOUT USING THIRD-PARTIES API
+#GET 3 PREDICTIONS API + Stockfish(local) + Lichess Cloud
 1.To use this program you should get an API token" from\
 [Lichess API](https://lichess.org/account/oauth/token)\
 it only requires READ permissions\
@@ -10,6 +10,3 @@ it only requires READ permissions\
 Optionally you can set refresh rate in milliseconds just in second line of token.txt file\
 
 
-#Problem:
-I don't know how to normalize stockfish output\
-I will be happy to receive solution to this one.
