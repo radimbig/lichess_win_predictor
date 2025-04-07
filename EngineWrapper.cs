@@ -1,8 +1,4 @@
 ﻿using System.Diagnostics;
-using Rudzoft.ChessLib;
-using Rudzoft.ChessLib.Factories;
-using Rudzoft.ChessLib.MoveGeneration;
-
 namespace Lichess_Prediction
 {
     public class EngineWrapper : IEngineWrapper, IDisposable
