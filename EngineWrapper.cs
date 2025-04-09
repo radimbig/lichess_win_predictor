@@ -103,7 +103,6 @@ namespace Lichess_Prediction
             string line;
             while ((line = reader.ReadLine()) != null)
             {
-                Console.WriteLine(line);
                 if (line.Contains(keyword))
                     break;
             }
