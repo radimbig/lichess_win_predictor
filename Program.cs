@@ -1,5 +1,8 @@
 ﻿using LichessNET.API;
 using LichessNET.Entities.Game;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using System.Reflection;
 
 namespace Lichess_Prediction
 {
@@ -19,7 +22,13 @@ namespace Lichess_Prediction
 
             var lichessApi = new LichessApiClient();
             await lichessApi.SetToken(token);
-            
+
+
+            // turning off logging
+            typeof(LichessApiClient)
+            .GetField("_logger", BindingFlags.NonPublic | BindingFlags.Instance)
+             ?.SetValue(lichessApi, NullLogger.Instance);
+
             var email = await lichessApi.GetAccountEmail();
             Console.WriteLine($"connected to:{email}");
 

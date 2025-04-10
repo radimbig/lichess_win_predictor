@@ -50,7 +50,7 @@ namespace Lichess_Prediction
         }
         public EngineWrapper(string pathToEngine, int depth) : this(pathToEngine)
         {
-            depth = this.depth;
+            this.depth = depth;
         }
         public int GetLocalCp(string fen)
         {
